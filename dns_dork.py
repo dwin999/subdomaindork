@@ -20,7 +20,6 @@ def find_subdmains(searchstrings):
             string = reply['unescapedUrl']
             string = string.replace("http://", "")
             string = string.replace("https://", "")
-            string = string.replace("www.", "")
             subdomain = string.split("/")
             print subdomain[0] + str(len(subdomainlist))
             subdomainlist.append(subdomain[0])
@@ -35,7 +34,7 @@ def update_string(xlist):
         searchstrings = searchstrings + ' -site:'+item
     return searchstrings
             
-target = "lastminute.com"
+target = sys.argv[1]
 
 subdomainlist = []
             
