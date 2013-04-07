@@ -22,7 +22,7 @@ def find_subdmains(searchstrings):
             string = string.replace("https://", "")
             subdomain = string.split("/")
             print subdomain[0] + str(len(subdomainlist))
-            subdomainlist.append(subdomain[0])
+            subdomainlist.append(str(subdomain[0])) # subdomain[0] is unicode, cast it to str
     if startlen == len(subdomainlist):
         print "no more domains"
         print subdomainlist 
@@ -45,4 +45,5 @@ for x in range(20):
 
     
 subdomainlist = list(set(subdomainlist)) # removing any duplicate entires
+subdomainlist.sort()
 print subdomainlist
