@@ -20,10 +20,9 @@ def find_subdmains(searchstrings):
             string = reply['unescapedUrl']
             string = string.replace("http://", "")
             string = string.replace("https://", "")
-            string = string.replace("www.", "")
             subdomain = string.split("/")
             print subdomain[0] + str(len(subdomainlist))
-            subdomainlist.append(subdomain[0])
+            subdomainlist.append(str(subdomain[0])) # subdomain[0] is unicode, cast it to str
     if startlen == len(subdomainlist):
         print "no more domains"
         print subdomainlist 
@@ -35,7 +34,7 @@ def update_string(xlist):
         searchstrings = searchstrings + ' -site:'+item
     return searchstrings
             
-target = "lastminute.com"
+target = sys.argv[1]
 
 subdomainlist = []
             
@@ -46,4 +45,5 @@ for x in range(20):
 
     
 subdomainlist = list(set(subdomainlist)) # removing any duplicate entires
+subdomainlist.sort()
 print subdomainlist
