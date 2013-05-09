@@ -39,7 +39,12 @@ def update_string(xlist):
         searchstrings = searchstrings + ' -site:'+item
     return searchstrings
             
-target = sys.argv[1]
+
+try:
+    target = sys.argv[1]
+except:
+    print "\nUsage: " + sys.argv[0] + " <target>\n"
+    sys.exit(1)
 
 subdomainlist = []
             
