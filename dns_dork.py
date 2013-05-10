@@ -4,7 +4,8 @@ import json
 import sys
 import urllib
 from time import sleep
-
+#Please input your bing API key below, you can get one from https://datamarket.azure.com/account/keys 
+key = 'put api key here'
 try:    # Python3 renamed urllib2 to urllib.request
     import urllib2
 except ImportError:
@@ -58,12 +59,12 @@ def get_args():
 def bing_subdomains(searchstrings):
     global args
     user_agent = 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Trident/4.0; FDM; .NET CLR 2.0.50727; InfoPath.2; .NET CLR 1.1.4322)'
-    key= ''
     creds = (':%s' % key).encode('base64')[:-1]
     auth = 'Basic %s' % creds
     url = 'https://api.datamarket.azure.com/Data.ashx/Bing/Search/Web?Query=%27'
     data = "site%3A"+args.target+'%20-www.'+args.target+searchstrings
     url = url + data + "%27&$top=50&$format=json"
+    out.verbose(url.encode('utf-8'))
     if(len(str(url)) > 2048):
         end(subdomainlist)
         exit()
@@ -76,12 +77,10 @@ def bing_subdomains(searchstrings):
     for reply in results['d']['results']:
         if reply['Url'] != None:
             string = reply['Url']
-            print '\n=[Link]= '
-            print string.encode('utf-8')
             string = string.replace("http://", "")
             string = string.replace("https://", "")
             subdomain = string.split("/")
-            #print subdomain[0] + str(len(subdomainlist))
+            out.good("Found subdomain - " + subdomain[0] + " [" + str(len(subdomainlist)) + "]")
             subdomainlist.append(subdomain[0].encode('utf-8')) # subdomain[0] is unicode, cast it to str
     if startlen == len(subdomainlist):
         print "no more domains"
@@ -93,7 +92,6 @@ def bing_update_string(xlist):
         searchstrings = searchstrings + '%20-domain%3A'+item
     #error in that the first string cannot have %20 
     searchstrings = searchstrings[3:]
-    print searchstrings
     return searchstrings
         
 def google_subdomains(searchstrings):
