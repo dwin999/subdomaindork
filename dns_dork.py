@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import json
+import platform
 import sys
 import urllib
 from time import sleep
@@ -32,7 +33,7 @@ class output:
 
 
 class col:
-    if sys.stdout.isatty():
+    if sys.stdout.isatty() and platform.system() != "Windows"
         green = '\033[32m'
         blue = '\033[94m'
         red = '\033[31m'
