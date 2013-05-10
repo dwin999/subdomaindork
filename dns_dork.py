@@ -1,31 +1,41 @@
 #!/usr/bin/env python
-import urllib2
-import urllib
 import json
 import sys
+import urllib
 from time import sleep
-def find_subdmains(searchstrings):
+
+try:    # Python3 renamed urllib2 to urllib.request
+    import urllib2
+except ImportError:
+    import urllib.request as urllib2
+    import urllib.parse as urllib
+
+def find_subdomains(searchstrings):
     url = 'http://ajax.googleapis.com/ajax/services/search/web?'
     params = { 'q': "site:"+target+' -site:www.'+target+searchstrings}
     data = urllib.urlencode(params)
     url = url + data + '&v=1.0'
-    print str(url)
+    print(str(url))
+
     request = urllib2.Request( url,None, {'Referer': 'http://www.duckduckgo.com' })
     response = urllib2.urlopen(request)
-    results = json.load(response)
+    results = json.loads(response.read().decode("utf-8"))
+    
     startlen = len(subdomainlist)
+
     for reply in results['responseData']['results']:
         if reply['unescapedUrl'] != None:
-            print '\n=[Link]= '
+            print('\n=[Link]= ')
             string = reply['unescapedUrl']
             string = string.replace("http://", "")
             string = string.replace("https://", "")
             subdomain = string.split("/")
-            print subdomain[0] + str(len(subdomainlist))
+            print(subdomain[0] + " " + str(len(subdomainlist)))
             subdomainlist.append(str(subdomain[0])) # subdomain[0] is unicode, cast it to str
+
     if startlen == len(subdomainlist):
-        print "no more domains"
-        print subdomainlist 
+        print("no more domains")
+        print(subdomainlist)
         sys.exit()
             
 def update_string(xlist):
@@ -33,17 +43,26 @@ def update_string(xlist):
     for item in xlist:
         searchstrings = searchstrings + ' -site:'+item
     return searchstrings
-            
-target = sys.argv[1]
 
-subdomainlist = []
+def get_args():
+    global target
+    try:
+        target = sys.argv[1]
+    except:
+        print("\nUsage: " + sys.argv[0] + " <target>\n")
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    global target
+    get_args()
+    subdomainlist = []
             
-for x in range(20):
+    for x in range(20):
+        subdomainlist = list(set(subdomainlist)) # removing any duplicate entires
+        searchstrings = update_string(subdomainlist)  # create search string from subdomain list
+        find_subdomains(searchstrings)  # find those strings 
+
     subdomainlist = list(set(subdomainlist)) # removing any duplicate entires
-    searchstrings = update_string(subdomainlist)  # create search string from subdomain list
-    find_subdmains(searchstrings)  # find those strings 
-
-    
-subdomainlist = list(set(subdomainlist)) # removing any duplicate entires
-subdomainlist.sort()
-print subdomainlist
+    subdomainlist.sort()
+    print(subdomainlist)
