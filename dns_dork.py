@@ -11,6 +11,40 @@ except ImportError:
     import urllib.request as urllib2
     import urllib.parse as urllib
 
+
+class output:
+    def status(self, message):
+        print(col.blue + "[*] " + col.end + message)
+
+    def good(self, message):
+        print(col.green + "[+] " + col.end + message)
+
+    def verbose(self, message):
+        if args.verbose:
+            print(col.brown + "[v] " + col.end + message)
+
+    def warn(self, message):
+        print(col.red + "[-] " + col.end + message)
+
+    def fatal(self, message):
+        print("\n" + col.red + "FATAL: " + message + col.end)
+
+
+class col:
+    if sys.stdout.isatty():
+        green = '\033[32m'
+        blue = '\033[94m'
+        red = '\033[31m'
+        brown = '\033[33m'
+        end = '\033[0m'
+    else:   # Colours mess up redirected output, disable them
+        green = ""
+        blue = ""
+        red = ""
+        brown = ""
+        end = ""
+
+
 def get_args():
     global args
     
@@ -25,7 +59,7 @@ def find_subdomains(searchstrings):
     params = { 'q': "site:"+args.target+' -site:www.'+args.target+searchstrings}
     data = urllib.urlencode(params)
     url = url + data + '&v=1.0'
-    print(str(url))
+    out.verbose(str(url))
 
     request = urllib2.Request( url,None, {'Referer': 'http://www.duckduckgo.com' })
     response = urllib2.urlopen(request)
@@ -35,16 +69,14 @@ def find_subdomains(searchstrings):
 
     for reply in results['responseData']['results']:
         if reply['unescapedUrl'] != None:
-            print('\n=[Link]= ')
             string = reply['unescapedUrl']
             string = string.replace("http://", "")
             string = string.replace("https://", "")
             subdomain = string.split("/")
-            print(subdomain[0] + " " + str(len(subdomainlist)))
+            out.good("Found subdomain - " + subdomain[0] + " [" + str(len(subdomainlist)) + "]")
             subdomainlist.append(str(subdomain[0])) # subdomain[0] is unicode, cast it to str
 
     if startlen == len(subdomainlist):
-        print("no more domains")
         print(subdomainlist)
         sys.exit()
             
@@ -57,6 +89,7 @@ def update_string(xlist):
 
 if __name__ == "__main__":
     global args
+    out = output()
     get_args()
     subdomainlist = []
             
