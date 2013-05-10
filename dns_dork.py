@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import json
+import platform
 import sys
 import urllib
 from time import sleep
