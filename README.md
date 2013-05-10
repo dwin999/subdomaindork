@@ -1,4 +1,4 @@
-subdomaindork-
+subdomaindork
 ==============
 
-subdomain dork uses google to find subdomains of a specified website
+subdomain dork uses google or Bing API to find subdomains of a specified domain
