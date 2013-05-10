@@ -59,7 +59,7 @@ def find_subdomains(searchstrings):
     params = { 'q': "site:"+args.target+' -site:www.'+args.target+searchstrings}
     data = urllib.urlencode(params)
     url = url + data + '&v=1.0'
-    out.verbose(str(url).encode('utf-8'))
+    out.verbose(url.encode('utf-8'))
 
     request = urllib2.Request( url,None, {'Referer': 'http://www.duckduckgo.com' })
     response = urllib2.urlopen(request)
@@ -74,7 +74,7 @@ def find_subdomains(searchstrings):
             string = string.replace("https://", "")
             subdomain = string.split("/")
             out.good("Found subdomain - " + subdomain[0] + " [" + str(len(subdomainlist)) + "]")
-            subdomainlist.append(str(subdomain[0])) # subdomain[0] is unicode, cast it to str
+            subdomainlist.append(subdomain[0].encode('utf-8')) # subdomain[0] is unicode, cast it to str
 
     if startlen == len(subdomainlist):
         print(subdomainlist)
