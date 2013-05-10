@@ -59,7 +59,7 @@ def find_subdomains(searchstrings):
     params = { 'q': "site:"+args.target+' -site:www.'+args.target+searchstrings}
     data = urllib.urlencode(params)
     url = url + data + '&v=1.0'
-    out.verbose(str(url))
+    out.verbose(str(url).encode('utf-8'))
 
     request = urllib2.Request( url,None, {'Referer': 'http://www.duckduckgo.com' })
     response = urllib2.urlopen(request)
